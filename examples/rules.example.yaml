@@ -1,0 +1,24 @@
+signal_rules:
+  - name: NEW_ORDER
+    regex: "(?i)newordersingle.*clordid=(?P<order_id>[A-Z0-9]+)"
+    state: "NEW_REQUESTED"
+
+  - name: ACK_NEW
+    regex: "(?i)executionreport.*exectype=0.*ordstatus=0.*clordid=(?P<order_id>[A-Z0-9]+)"
+    state: "ACKED_NEW"
+
+  - name: PARTIAL_FILL
+    regex: "(?i)executionreport.*exectype=f.*leavesqty=(?P<leaves>[0-9]+).*clordid=(?P<order_id>[A-Z0-9]+)"
+    state: "PARTIALLY_FILLED"
+
+  - name: FILLED
+    regex: "(?i)executionreport.*exectype=f.*leavesqty=0.*clordid=(?P<order_id>[A-Z0-9]+)"
+    state: "FILLED"
+
+  - name: REJECT
+    regex: "(?i)executionreport.*exectype=8.*clordid=(?P<order_id>[A-Z0-9]+)"
+    state: "REJECTED"
+
+entity_id_field: "order_id"
+start_state: "START"
+unknown_state: "UNKNOWN"
